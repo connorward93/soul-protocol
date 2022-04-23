@@ -1,40 +1,57 @@
-import React, { useEffect } from "react";
+import React, { useContext, useEffect } from "react";
 import gsap from "gsap";
 import classes from "./home.module.scss";
 import Button from "components/Button";
+import AppContext from "context/AppContext";
+import { motion } from "framer-motion";
+import { useRouter } from "next/router";
 
 type HomeProps = {
   status?: string;
 };
 
-export default function Home({ status }: HomeProps) {
+export default function Home() {
+  const router = useRouter();
+  const { state } = useContext(AppContext);
+  const { status } = state;
+
   useEffect(() => {
-    const timeline = gsap.timeline({ repeat: -1 });
-    timeline.call(
-      () => {
-        gsap
-          .to("#stop1", {
-            stopColor: `#${Math.floor(Math.random() * 16777215).toString(16)}`,
-          })
-          .duration(2);
-        gsap
-          .to("#stop2", {
-            stopColor: `#${Math.floor(Math.random() * 16777215).toString(16)}`,
-          })
-          .duration(2);
-        gsap
-          .to("#stop3", {
-            stopColor: `#${Math.floor(Math.random() * 16777215).toString(16)}`,
-          })
-          .duration(2);
-      },
-      [],
-      "+=2.0"
-    );
+    if (!status.includes("logged-in")) {
+      const timeline = gsap.timeline({ repeat: -1 });
+      timeline.call(
+        () => {
+          gsap
+            .to("#stop1", {
+              stopColor: `#${Math.floor(Math.random() * 16777215).toString(
+                16
+              )}`,
+            })
+            .duration(2);
+          gsap
+            .to("#stop2", {
+              stopColor: `#${Math.floor(Math.random() * 16777215).toString(
+                16
+              )}`,
+            })
+            .duration(2);
+          gsap
+            .to("#stop3", {
+              stopColor: `#${Math.floor(Math.random() * 16777215).toString(
+                16
+              )}`,
+            })
+            .duration(2);
+        },
+        [],
+        "+=2.0"
+      );
+    }
   }, []);
 
+  useEffect(() => {});
+
   return (
-    <div className={classes.container}>
+    <div className={classes.container} onClick={() => router.push("/mint")}>
       <svg
         className={classes.circle}
         width="300"
@@ -59,6 +76,7 @@ export default function Home({ status }: HomeProps) {
           </linearGradient>
         </defs>
       </svg>
+      <div className={classes.status}></div>
     </div>
   );
 }

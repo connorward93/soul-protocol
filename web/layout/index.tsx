@@ -1,5 +1,6 @@
 import React, { ReactNode, useContext, useEffect } from "react";
 import AuthContext from "context/AuthContext";
+import AppContext from "context/AppContext";
 import Web3 from "web3";
 import { ADAPTER_EVENTS, SafeEventEmitterProvider } from "@web3auth/base";
 import { Web3Auth, Web3AuthOptions } from "@web3auth/web3auth";
@@ -7,8 +8,9 @@ import classes from "./layout.module.scss";
 import Button from "components/Button";
 
 export default function Layout({ children }: { children: ReactNode }) {
-  const { state, dispatch } = useContext(AuthContext);
-  const { loading, instance, provider } = state;
+  const { state: authState, dispatch: authDispatch } = useContext(AuthContext);
+  const { loading, instance, provider } = authState;
+  const { state, dispatch } = useContext(AppContext);
 
   useEffect(() => {
     const init = async () => {
@@ -23,7 +25,7 @@ export default function Layout({ children }: { children: ReactNode }) {
           web3AuthCtorParams as Web3AuthOptions
         );
         subscribeAuthEvents(web3AuthInstance);
-        dispatch({ type: "set-instance", payload: web3AuthInstance });
+        authDispatch({ type: "set-instance", payload: web3AuthInstance });
         await web3AuthInstance.initModal();
       } catch (error) {
         console.error(error);
@@ -34,7 +36,7 @@ export default function Layout({ children }: { children: ReactNode }) {
       // Can subscribe to all ADAPTER_EVENTS and LOGIN_MODAL_EVENTS
       web3AuthInstance.on(ADAPTER_EVENTS.CONNECTED, (data: unknown) => {
         console.log("Yeah!, you are successfully logged in", data);
-        dispatch({ type: "set-loading", payload: false });
+        authDispatch({ type: "set-loading", payload: false });
       });
 
       web3AuthInstance.on(ADAPTER_EVENTS.CONNECTING, () => {
@@ -57,7 +59,8 @@ export default function Layout({ children }: { children: ReactNode }) {
     if (!instance && loading) return;
     const getProvider = async () => {
       const provider = await instance.connect();
-      dispatch({ type: "set-provider", payload: provider });
+      authDispatch({ type: "set-provider", payload: provider });
+      dispatch({ type: "set-status", payload: "logged-in" });
     };
     getProvider();
   }, [loading, instance]);
@@ -68,13 +71,12 @@ export default function Layout({ children }: { children: ReactNode }) {
       return;
     }
     const provider = await instance.connect();
-    dispatch({ type: "set-provider", payload: provider });
+    authDispatch({ type: "set-provider", payload: provider });
     const user = await instance.getUserInfo();
   };
 
   const logout = async () => {
     await instance.logout();
-    // setProvider(null);
   };
 
   return (
