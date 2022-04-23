@@ -48,8 +48,6 @@ export default function Home() {
     }
   }, []);
 
-  useEffect(() => {});
-
   return (
     <div className={classes.container} onClick={() => router.push("/mint")}>
       <svg

@@ -5,6 +5,7 @@ import Layout from "layout";
 import { useContext, useEffect, useState } from "react";
 import AuthContext from "context/AuthContext";
 import AppContext from "context/AppContext";
+import Link from "next/Link";
 
 const Index: NextPage = () => {
   const [status, setStatus] = useState("initial");
@@ -28,7 +29,10 @@ const Index: NextPage = () => {
         <title>Soul Protocol</title>
       </Head>
       <main>
-        <Main />
+        Home
+        <Link href="/mint">
+          <a>Mint</a>
+        </Link>
       </main>
     </Layout>
   );

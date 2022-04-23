@@ -6,6 +6,7 @@ import { ADAPTER_EVENTS, SafeEventEmitterProvider } from "@web3auth/base";
 import { Web3Auth, Web3AuthOptions } from "@web3auth/web3auth";
 import classes from "./layout.module.scss";
 import Button from "components/Button";
+import Main from "components/Main";
 
 export default function Layout({ children }: { children: ReactNode }) {
   const { state: authState, dispatch: authDispatch } = useContext(AuthContext);
@@ -107,7 +108,7 @@ export default function Layout({ children }: { children: ReactNode }) {
           )}
         </div>
       </nav>
-      {children}
+      {loading ? <Main /> : children}
     </div>
   );
 }
