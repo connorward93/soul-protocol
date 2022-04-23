@@ -9,10 +9,9 @@ export default function Welcome() {
     const els = document.querySelectorAll('[id^="block"]');
     els.forEach((el) => {
       timeline.to(el, { y: "-100%", opacity: 1 }, "+=1");
-      timeline.to(el, { y: "-200%", opacity: 0 }, "+=1");
+      timeline.to(el, { y: "-200%", opacity: 0 }, "+=0.5");
       timeline.to(el, { visibility: "hidden" });
     });
-
     timeline.to("#actions", { opacity: 1 }, "+=1");
   }, []);
 
@@ -38,8 +37,8 @@ export default function Welcome() {
           <a className={classes.card}>
             <div className={classes.image}></div>
             <div className={classes.details}>
-              <h5>Action 1</h5>
-              <p> Lorem ipsum dolor sit amet. </p>
+              <h5>Mint with hardware</h5>
+              <p> Generate your soul with data from the physical world. </p>
             </div>
           </a>
         </Link>
@@ -47,8 +46,8 @@ export default function Welcome() {
           <a className={classes.card}>
             <div className={classes.image}></div>
             <div className={classes.details}>
-              <h5>Action 2</h5>
-              <p> Coming soon. </p>
+              <h5>Quick onboarding</h5>
+              <p> Generate your soul via a short questionnaire.</p>
             </div>
           </a>
         </Link>
@@ -56,8 +55,8 @@ export default function Welcome() {
           <a className={classes.card}>
             <div className={classes.image}></div>
             <div className={classes.details}>
-              <h5>Action 3</h5>
-              <p> Coming soon. </p>
+              <h5>Mint with webcam</h5>
+              <p>Generate your soul with your likeness.</p>
             </div>
           </a>
         </Link>
