@@ -1,5 +1,6 @@
 import React, { ReactNode } from "react";
 import classes from "./button.module.scss";
+import classNames from "classnames";
 
 type ButtonProps = {
   variant?: string;
@@ -14,13 +15,18 @@ type ButtonProps = {
 };
 
 export default function Button({
+  variant,
   onClick,
   disabled,
   label,
   children,
 }: ButtonProps) {
   return (
-    <button className={classes.button} onClick={onClick} disabled={disabled}>
+    <button
+      className={classNames(classes.button, classes[`button--${variant}`])}
+      onClick={onClick}
+      disabled={disabled}
+    >
       {label || children}
     </button>
   );
