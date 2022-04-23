@@ -81,7 +81,7 @@ export default function Layout({ children }: { children: ReactNode }) {
     <div>
       <nav className={classes.nav}>
         <div className={classes.actions}>
-          {provider ? (
+          {/* {provider ? (
             <Button onClick={logout}>Logout</Button>
           ) : (
             <Button onClick={login} disabled={loading}>
@@ -102,7 +102,7 @@ export default function Layout({ children }: { children: ReactNode }) {
                 {loading ? "Loading" : null}
               </>
             </Button>
-          )}
+          )} */}
         </div>
       </nav>
       {children}
