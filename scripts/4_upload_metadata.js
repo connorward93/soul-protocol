@@ -15,11 +15,12 @@ const ipfsHash = await ipfsUpload(SVG, "fileName");
 const metadata = {
   name: "Soul",
   tokenId: 2,
-  desicription: "stuff",
+  desicription:
+    'Your Soul NFT represents your most authentic "true self" on chain. An interoperable "you" that bridges pysical and vitrual world. A build block for a better web. Connect yourself severeign Soul to the World, and watch it evolves along side you.',
   image: ipfsHash,
   attributes: [
     {
-      R: r,
+      R: r, //hex
       G: g,
       B: b,
     },
