@@ -7,6 +7,8 @@ import {
 } from "react";
 
 type TState = {
+  // auth: any;
+  loading: boolean;
   instance: any;
   provider: any;
 };
@@ -14,6 +16,8 @@ type TState = {
 type TAction = { type: string; payload: any };
 
 const initialState: TState = {
+  // auth: null,
+  loading: true,
   instance: null,
   provider: null,
 };
@@ -28,6 +32,8 @@ const AuthContext = createContext<{
 
 const reducer = (state: TState, action: TAction): TState => {
   switch (action.type) {
+    case "set-loading":
+      return { ...state, loading: action.payload };
     case "set-instance":
       return { ...state, instance: action.payload };
     case "set-provider":
