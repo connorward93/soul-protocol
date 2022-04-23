@@ -1,94 +1,56 @@
-import React, { ReactNode, useContext, useEffect } from "react";
-import AuthContext from "context/AuthContext--old";
+import React, { ReactNode, useContext, useEffect, useState } from "react";
+import AuthContext from "context/AuthContext";
 import AppContext from "context/AppContext";
-import Web3 from "web3";
-import { ADAPTER_EVENTS, SafeEventEmitterProvider } from "@web3auth/base";
-import { Web3Auth, Web3AuthOptions } from "@web3auth/web3auth";
+
 import classes from "./layout.module.scss";
 import Button from "components/Button";
 import Main from "components/Main";
 
 export default function Layout({ children }: { children: ReactNode }) {
-  const authState = useContext(AuthContext);
-  // const { loading, instance, provider } = authState;
-  const loading = true;
-  const provider = null;
+  const {
+    accounts,
+    getAccounts,
+    login,
+    logout,
+    provider,
+    isLoading,
+    // processing,
+    ...authState
+  } = useContext(AuthContext);
   const { state, dispatch } = useContext(AppContext);
-  console.log(authState);
+  const loading = isLoading;
+  const [user, setUser] = useState<string | null>();
 
-  // useEffect(() => {
-  //   const init = async () => {
-  //     try {
-  //       const web3AuthCtorParams = {
-  //         clientId: process.env.NEXT_PUBLIC_WEB3AUTH_CLIENT_ID,
-  //         chainConfig: { chainNamespace: "eip155", chainId: "0x13881" },
-  //       };
+  useEffect(() => {
+    const localUser =
+      typeof window !== "undefined" ? localStorage.getItem("user") : "";
+    setUser(localUser);
+  }, []);
 
-  //       const { Web3Auth } = await import("@web3auth/web3auth");
-  //       const web3AuthInstance = new Web3Auth(
-  //         web3AuthCtorParams as Web3AuthOptions
-  //       );
-  //       subscribeAuthEvents(web3AuthInstance);
-  //       authDispatch({ type: "set-instance", payload: web3AuthInstance });
-  //       await web3AuthInstance.initModal();
-  //     } catch (error) {
-  //       console.error(error);
-  //     }
-  //   };
+  useEffect(() => {
+    if (provider) {
+      (async () => {
+        const accounts = await getAccounts();
+        setUser(accounts[0]);
+      })();
+    }
+  }, [provider]);
 
-  //   const subscribeAuthEvents = (web3AuthInstance: Web3Auth) => {
-  //     // Can subscribe to all ADAPTER_EVENTS and LOGIN_MODAL_EVENTS
-  //     web3AuthInstance.on(ADAPTER_EVENTS.CONNECTED, (data: unknown) => {
-  //       console.log("Yeah!, you are successfully logged in", data);
-  //       authDispatch({ type: "set-loading", payload: false });
-  //     });
-
-  //     web3AuthInstance.on(ADAPTER_EVENTS.CONNECTING, () => {
-  //       console.log("connecting");
-  //     });
-
-  //     web3AuthInstance.on(ADAPTER_EVENTS.DISCONNECTED, () => {
-  //       console.log("disconnected");
-  //     });
-
-  //     web3AuthInstance.on(ADAPTER_EVENTS.ERRORED, (error) => {
-  //       console.error("some error or user has cancelled login request", error);
-  //     });
-  //   };
-
-  //   init();
-  // }, []);
-
-  // useEffect(() => {
-  //   if (!instance && loading) return;
-  //   const getProvider = async () => {
-  //     const provider = await instance.connect();
-  //     authDispatch({ type: "set-provider", payload: provider });
-  //     dispatch({ type: "set-status", payload: "logged-in" });
-  //   };
-  //   getProvider();
-  // }, [loading, instance]);
-
-  const login = async () => {
-    // if (!instance) {
-    //   console.log("web3auth not initialized yet");
-    //   return;
-    // }
-    // const provider = await instance.connect();
-    // authDispatch({ type: "set-provider", payload: provider });
-    // const user = await instance.getUserInfo();
-  };
-
-  const logout = async () => {
-    // await instance.logout();
+  const Profile = () => {
+    return (
+      <div className={classes.profile} onClick={logout}>
+        <div className={classes.image}></div>
+        <div className={classes.name}>{user?.substring(0, 12)}...</div>
+      </div>
+    );
   };
 
   return (
     <div className={classes.container}>
       <nav className={classes.nav}>
         <div className={classes.actions}>
-          {provider ? (
-            <Button onClick={logout}>Logout</Button>
+          {user ? (
+            <Profile />
           ) : (
             <Button onClick={login} disabled={loading}>
               <>
@@ -111,7 +73,7 @@ export default function Layout({ children }: { children: ReactNode }) {
           )}
         </div>
       </nav>
-      {loading ? <Main /> : children}
+      {loading || !authState.web3Auth ? <Main /> : children}
     </div>
   );
 }

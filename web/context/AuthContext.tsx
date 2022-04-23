@@ -10,16 +10,16 @@ import {
   useState,
 } from "react";
 import { CHAIN_CONFIG, CHAIN_CONFIG_TYPE } from "lib/chainConfig";
-import { WEB3AUTH_NETWORK_TYPE } from "lib/web3AuthNetwork";
 import { getWalletProvider, IWalletProvider } from "lib/walletProvider";
-import { CHAIN_NAMESPACES, CustomChainConfig } from "@web3auth/base";
 
 export interface IWeb3AuthContext {
+  user: any;
+  accounts: any;
   web3Auth: Web3Auth | null;
   provider: any;
   isLoading: boolean;
+  // processing: boolean;
   chain: string;
-  user: unknown;
   login: () => Promise<void>;
   logout: () => Promise<void>;
   getUserInfo: () => Promise<any>;
@@ -30,10 +30,12 @@ export interface IWeb3AuthContext {
   signAndSendTransaction: () => Promise<void>;
 }
 
-export const Web3AuthContext = createContext<IWeb3AuthContext>({
+const AuthContext = createContext<IWeb3AuthContext>({
+  accounts: null,
   web3Auth: null,
   provider: null,
   isLoading: false,
+  // processing: true,
   chain: "",
   user: null,
   login: async () => {},
@@ -47,24 +49,24 @@ export const Web3AuthContext = createContext<IWeb3AuthContext>({
 });
 
 export function useWeb3Auth(): IWeb3AuthContext {
-  return useContext(Web3AuthContext);
+  return useContext(AuthContext);
 }
 
-interface IWeb3AuthState {
-  // web3AuthNetwork: WEB3AUTH_NETWORK_TYPE;
-  // chain: CHAIN_CONFIG_TYPE;
-}
+interface IWeb3AuthState {}
 interface IWeb3AuthProps {
   children?: ReactNode;
-  // web3AuthNetwork: WEB3AUTH_NETWORK_TYPE;
-  // chain: CHAIN_CONFIG_TYPE;
 }
+
+export default AuthContext;
 
 export const AuthProvider: FunctionComponent<IWeb3AuthState> = ({
   children,
 }: // web3AuthNetwork,
 // chain,
 IWeb3AuthProps) => {
+  // const localUser =
+  //   typeof window !== "undefined" ? localStorage.getItem("user") : "";
+
   // @ts-ignore
   const chain = "polygon";
   const web3AuthNetwork = "testnet";
@@ -72,6 +74,7 @@ IWeb3AuthProps) => {
   const [provider, setProvider] = useState<IWalletProvider | null>(null);
   const [user, setUser] = useState<unknown | null>(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [accounts, setAccounts] = useState<unknown | null>(null);
 
   const setWalletProvider = useCallback(
     (web3authProvider: SafeEventEmitterProvider) => {
@@ -90,7 +93,6 @@ IWeb3AuthProps) => {
       // Can subscribe to all ADAPTER_EVENTS and LOGIN_MODAL_EVENTS
       web3auth.on(ADAPTER_EVENTS.CONNECTED, (data: unknown) => {
         console.log("Yeah!, you are successfully logged in", data);
-        setUser(data);
         setWalletProvider(web3auth.provider!);
       });
 
@@ -174,10 +176,13 @@ IWeb3AuthProps) => {
   const getAccounts = async () => {
     if (!provider) {
       console.log("provider not initialized yet");
-      uiConsole("provider not initialized yet");
       return;
     }
-    await provider.getAccounts();
+    const accounts = await provider.getAccounts();
+    setAccounts(accounts);
+
+    localStorage.setItem("user", accounts);
+    return accounts;
   };
 
   const getBalance = async () => {
@@ -224,10 +229,11 @@ IWeb3AuthProps) => {
   };
 
   const contextProvider = {
+    user,
+    accounts,
     web3Auth,
     chain,
     provider,
-    user,
     isLoading,
     login,
     logout,
@@ -238,9 +244,10 @@ IWeb3AuthProps) => {
     signTransaction,
     signAndSendTransaction,
   };
+
   return (
-    <Web3AuthContext.Provider value={contextProvider}>
+    <AuthContext.Provider value={contextProvider}>
       {children}
-    </Web3AuthContext.Provider>
+    </AuthContext.Provider>
   );
 };

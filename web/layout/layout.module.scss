@@ -6,9 +6,29 @@
   display: flex;
   padding: 1.6rem;
   width: 100vw;
-  height: 7.2rem;
+  height: 8.4rem;
 }
 
 .actions {
   margin-left: auto;
+}
+
+.profile {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  font-size: 1.6rem;
+  padding: 0.8rem 1.2rem;
+  border-radius: 0.8rem;
+  cursor: pointer;
+  transition: all 200ms ease-out;
+  &:hover {
+    background-color: rgba(0, 0, 0, 0.025);
+  }
+  .image {
+    width: 3.2rem;
+    height: 3.2rem;
+    border-radius: 1.6rem;
+    background-color: rgba(0, 0, 0, 0.1);
+  }
 }

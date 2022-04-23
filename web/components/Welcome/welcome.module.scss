@@ -1,0 +1,60 @@
+.container {
+  position: relative;
+  font-size: 2.4rem;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 40rem;
+  .text {
+    position: absolute;
+    opacity: 0;
+    text-align: center;
+    width: 100%;
+  }
+}
+
+.actions {
+  width: 80vw;
+  display: flex;
+  gap: 2.4rem;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  opacity: 0;
+}
+
+.card {
+  width: 50%;
+  &:hover {
+    .image,
+    .details {
+      border: 1px solid rgba(0, 0, 0, 1);
+    }
+  }
+}
+
+.image {
+  //   height: 40rem;
+  padding-bottom: 100%;
+}
+
+.image,
+.details {
+  transition: all 300ms ease-out;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.image {
+  border-radius: 1.6rem 1.6rem 0 0;
+}
+
+.details {
+  border-radius: 0 0 1.6rem 1.6rem;
+  border-top: 0px;
+  padding: 1.6rem;
+  p {
+    font-size: 1.2rem;
+  }
+}

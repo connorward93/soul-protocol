@@ -6,6 +6,7 @@ import { useContext, useEffect, useState } from "react";
 import AuthContext from "context/AuthContext--old";
 import AppContext from "context/AppContext";
 import Link from "next/Link";
+import Welcome from "components/Welcome";
 
 const Index: NextPage = () => {
   const [status, setStatus] = useState("initial");
@@ -29,10 +30,7 @@ const Index: NextPage = () => {
         <title>Soul Protocol</title>
       </Head>
       <main>
-        Home
-        <Link href="/mint">
-          <a>Mint</a>
-        </Link>
+        <Welcome />
       </main>
     </Layout>
   );
