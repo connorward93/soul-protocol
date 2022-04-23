@@ -1,0 +1,23 @@
+.button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 14px 32px;
+  font-size: 20px;
+  letter-spacing: 0.08em;
+  line-height: 1.5rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  border: 3px solid black;
+  border-radius: 8px;
+  text-align: center;
+  transition: all 200ms ease;
+  min-width: 140px;
+  cursor: pointer;
+  background: transparent;
+}
+
+.button:hover {
+  color: white;
+  background-color: black;
+}

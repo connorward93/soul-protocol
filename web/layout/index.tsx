@@ -2,6 +2,8 @@ import React, { ReactNode, useContext, useEffect } from "react";
 import AuthContext from "context/AuthContext";
 import { ADAPTER_EVENTS, SafeEventEmitterProvider } from "@web3auth/base";
 import type { Web3Auth, Web3AuthOptions } from "@web3auth/web3auth";
+import classes from "./layout.module.scss";
+import Button from "components/Button";
 
 export default function Layout({ children }: { children: ReactNode }) {
   const { state, dispatch } = useContext(AuthContext);
@@ -60,8 +62,10 @@ export default function Layout({ children }: { children: ReactNode }) {
 
   return (
     <div>
-      <nav>
-        <button onClick={login}>Login</button>
+      <nav className={classes.nav}>
+        <div className={classes.actions}>
+          <Button onClick={login}>Login</Button>
+        </div>
       </nav>
       {children}
     </div>
