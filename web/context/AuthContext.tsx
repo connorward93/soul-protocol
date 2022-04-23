@@ -1,54 +1,246 @@
+import { ADAPTER_EVENTS, SafeEventEmitterProvider } from "@web3auth/base";
+import { Web3Auth } from "@web3auth/web3auth";
 import {
   createContext,
-  Dispatch,
-  useReducer,
+  FunctionComponent,
+  ReactNode,
+  useCallback,
+  useContext,
   useEffect,
   useState,
 } from "react";
+import { CHAIN_CONFIG, CHAIN_CONFIG_TYPE } from "lib/chainConfig";
+import { WEB3AUTH_NETWORK_TYPE } from "lib/web3AuthNetwork";
+import { getWalletProvider, IWalletProvider } from "lib/walletProvider";
+import { CHAIN_NAMESPACES, CustomChainConfig } from "@web3auth/base";
 
-type TState = {
-  // auth: any;
-  loading: boolean;
-  instance: any;
+export interface IWeb3AuthContext {
+  web3Auth: Web3Auth | null;
   provider: any;
-};
+  isLoading: boolean;
+  chain: string;
+  user: unknown;
+  login: () => Promise<void>;
+  logout: () => Promise<void>;
+  getUserInfo: () => Promise<any>;
+  signMessage: () => Promise<any>;
+  getAccounts: () => Promise<any>;
+  getBalance: () => Promise<any>;
+  signTransaction: () => Promise<void>;
+  signAndSendTransaction: () => Promise<void>;
+}
 
-type TAction = { type: string; payload: any };
-
-const initialState: TState = {
-  // auth: null,
-  loading: true,
-  instance: null,
+export const Web3AuthContext = createContext<IWeb3AuthContext>({
+  web3Auth: null,
   provider: null,
-};
-
-const AuthContext = createContext<{
-  state: TState;
-  dispatch: Dispatch<TAction>;
-}>({
-  state: initialState,
-  dispatch: () => {},
+  isLoading: false,
+  chain: "",
+  user: null,
+  login: async () => {},
+  logout: async () => {},
+  getUserInfo: async () => {},
+  signMessage: async () => {},
+  getAccounts: async () => {},
+  getBalance: async () => {},
+  signTransaction: async () => {},
+  signAndSendTransaction: async () => {},
 });
 
-const reducer = (state: TState, action: TAction): TState => {
-  switch (action.type) {
-    case "set-loading":
-      return { ...state, loading: action.payload };
-    case "set-instance":
-      return { ...state, instance: action.payload };
-    case "set-provider":
-      return { ...state, provider: action.payload };
-    default:
-      return state;
-  }
+export function useWeb3Auth(): IWeb3AuthContext {
+  return useContext(Web3AuthContext);
+}
+
+interface IWeb3AuthState {
+  // web3AuthNetwork: WEB3AUTH_NETWORK_TYPE;
+  // chain: CHAIN_CONFIG_TYPE;
+}
+interface IWeb3AuthProps {
+  children?: ReactNode;
+  // web3AuthNetwork: WEB3AUTH_NETWORK_TYPE;
+  // chain: CHAIN_CONFIG_TYPE;
+}
+
+export const AuthProvider: FunctionComponent<IWeb3AuthState> = ({
+  children,
+}: // web3AuthNetwork,
+// chain,
+IWeb3AuthProps) => {
+  // @ts-ignore
+  const chain = "polygon";
+  const web3AuthNetwork = "testnet";
+  const [web3Auth, setWeb3Auth] = useState<Web3Auth | null>(null);
+  const [provider, setProvider] = useState<IWalletProvider | null>(null);
+  const [user, setUser] = useState<unknown | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
+
+  const setWalletProvider = useCallback(
+    (web3authProvider: SafeEventEmitterProvider) => {
+      const walletProvider = getWalletProvider(
+        chain,
+        web3authProvider,
+        uiConsole
+      );
+      setProvider(walletProvider);
+    },
+    []
+  );
+
+  useEffect(() => {
+    const subscribeAuthEvents = (web3auth: Web3Auth) => {
+      // Can subscribe to all ADAPTER_EVENTS and LOGIN_MODAL_EVENTS
+      web3auth.on(ADAPTER_EVENTS.CONNECTED, (data: unknown) => {
+        console.log("Yeah!, you are successfully logged in", data);
+        setUser(data);
+        setWalletProvider(web3auth.provider!);
+      });
+
+      web3auth.on(ADAPTER_EVENTS.CONNECTING, () => {
+        console.log("connecting");
+      });
+
+      web3auth.on(ADAPTER_EVENTS.DISCONNECTED, () => {
+        console.log("disconnected");
+        setUser(null);
+      });
+
+      web3auth.on(ADAPTER_EVENTS.ERRORED, (error) => {
+        console.error("some error or user has cancelled login request", error);
+      });
+    };
+
+    // @ts-ignore
+    const currentChainConfig = CHAIN_CONFIG[chain];
+
+    async function init() {
+      try {
+        const { Web3Auth } = await import("@web3auth/web3auth");
+        const { OpenloginAdapter } = await import(
+          "@web3auth/openlogin-adapter"
+        );
+        const clientId = process.env.NEXT_PUBLIC_WEB3AUTH_CLIENT_ID!;
+        setIsLoading(true);
+        const web3AuthInstance = new Web3Auth({
+          chainConfig: currentChainConfig,
+          // get your client id from https://dashboard.web3auth.io
+          clientId,
+        });
+
+        const adapter = new OpenloginAdapter({
+          adapterSettings: { network: web3AuthNetwork, clientId },
+        });
+        web3AuthInstance.configureAdapter(adapter);
+        subscribeAuthEvents(web3AuthInstance);
+        setWeb3Auth(web3AuthInstance);
+        await web3AuthInstance.initModal();
+      } catch (error) {
+        console.error(error);
+      } finally {
+        setIsLoading(false);
+      }
+    }
+    init();
+  }, [chain, web3AuthNetwork, setWalletProvider]);
+
+  const login = async () => {
+    if (!web3Auth) {
+      console.log("web3auth not initialized yet");
+      uiConsole("web3auth not initialized yet");
+      return;
+    }
+    const localProvider = await web3Auth.connect();
+    setWalletProvider(localProvider!);
+  };
+
+  const logout = async () => {
+    if (!web3Auth) {
+      console.log("web3auth not initialized yet");
+      uiConsole("web3auth not initialized yet");
+      return;
+    }
+    await web3Auth.logout();
+    setProvider(null);
+  };
+
+  const getUserInfo = async () => {
+    if (!web3Auth) {
+      console.log("web3auth not initialized yet");
+      uiConsole("web3auth not initialized yet");
+      return;
+    }
+    const user = await web3Auth.getUserInfo();
+    uiConsole(user);
+  };
+
+  const getAccounts = async () => {
+    if (!provider) {
+      console.log("provider not initialized yet");
+      uiConsole("provider not initialized yet");
+      return;
+    }
+    await provider.getAccounts();
+  };
+
+  const getBalance = async () => {
+    if (!provider) {
+      console.log("provider not initialized yet");
+      uiConsole("provider not initialized yet");
+      return;
+    }
+    await provider.getBalance();
+  };
+
+  const signMessage = async () => {
+    if (!provider) {
+      console.log("provider not initialized yet");
+      uiConsole("provider not initialized yet");
+      return;
+    }
+    await provider.signMessage();
+  };
+
+  const signTransaction = async () => {
+    if (!provider) {
+      console.log("provider not initialized yet");
+      uiConsole("provider not initialized yet");
+      return;
+    }
+    await provider.signTransaction();
+  };
+
+  const signAndSendTransaction = async () => {
+    if (!provider) {
+      console.log("provider not initialized yet");
+      uiConsole("provider not initialized yet");
+      return;
+    }
+    await provider.signAndSendTransaction();
+  };
+
+  const uiConsole = (...args: unknown[]): void => {
+    const el = document.querySelector("#console>p");
+    if (el) {
+      el.innerHTML = JSON.stringify(args || {}, null, 2);
+    }
+  };
+
+  const contextProvider = {
+    web3Auth,
+    chain,
+    provider,
+    user,
+    isLoading,
+    login,
+    logout,
+    getUserInfo,
+    getAccounts,
+    getBalance,
+    signMessage,
+    signTransaction,
+    signAndSendTransaction,
+  };
+  return (
+    <Web3AuthContext.Provider value={contextProvider}>
+      {children}
+    </Web3AuthContext.Provider>
+  );
 };
-
-export const AuthProvider = ({ children }: { children: JSX.Element }) => {
-  const [state, dispatch] = useReducer(reducer, initialState);
-  const value = { state, dispatch };
-
-  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
-};
-
-export const AuthConsumer = AuthContext.Consumer;
-export default AuthContext;
