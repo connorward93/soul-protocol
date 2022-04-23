@@ -1,8 +1,13 @@
 import React, { useEffect } from "react";
 import gsap from "gsap";
 import classes from "./home.module.scss";
+import Button from "components/Button";
 
-export default function Home() {
+type HomeProps = {
+  status?: string;
+};
+
+export default function Home({ status }: HomeProps) {
   useEffect(() => {
     const timeline = gsap.timeline({ repeat: -1 });
     timeline.call(
