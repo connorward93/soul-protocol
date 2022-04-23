@@ -73,7 +73,8 @@ export default function Layout({ children }: { children: ReactNode }) {
           )}
         </div>
       </nav>
-      {loading || !authState.web3Auth || !user ? <Main /> : children}
+      {/* {loading || !authState.web3Auth || !user ? <Main /> : children} */}
+      {children}
     </div>
   );
 }

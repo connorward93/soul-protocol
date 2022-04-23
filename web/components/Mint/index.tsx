@@ -1,14 +1,52 @@
-import React from "react";
+import React, { useContext } from "react";
 import classes from "./mint.module.scss";
 import Button from "components/Button";
+import AppContext from "context/AppContext";
+import Camera from "./Camera";
+import Generator from "./Generator";
 
 export default function Mint() {
+  const { state, dispatch } = useContext(AppContext);
+  const { mintVariant, mintStatus } = state;
+
+  const renderCanvas = () => {
+    switch (mintVariant) {
+      case "camera":
+      default:
+        return <Camera />;
+      // default:
+      //   return null;
+    }
+  };
+
+  const renderIntroDetails = () => {
+    switch (mintVariant) {
+      case "camera":
+      default:
+        return "Enable your camera to generate your soul with your likeness.";
+      // default:
+      //   return null;
+    }
+  };
+
+  const renderDetails = () => {
+    switch (mintStatus) {
+      case "generation":
+        return "Gathering data. Relax.";
+      case "initial":
+      default:
+        return renderIntroDetails();
+    }
+  };
+
   return (
     <div className={classes.container}>
       <div className={classes.canvas}>
-        <div className={classes.image}>Canvas</div>
+        <div className={classes.image}>
+          {mintStatus?.includes("generation") ? <Generator /> : renderCanvas()}
+        </div>
         <div className={classes.details}>
-          <div>Details</div>
+          <div>{renderDetails()}</div>
           <div>
             <Button variant="secondary" onClick={() => {}}>
               Mint
@@ -16,21 +54,6 @@ export default function Mint() {
           </div>
         </div>
       </div>
-      {/* <div className={classes.column}>
-        <div className={classes.card}>
-          <p>
-            zorb ↗ is a simple, open-source identity system for the
-            decentralized Internet. It is maintained by ZORA, the decentralized
-            marketplace protocol.
-          </p>
-          <p>
-            To ring in 2022, we invite you to mint a zorb NFT of your own. Each
-            NFT imbues the properties of its wallet holder, and when sent to
-            someone else, will transform. Minting is free for 42 hours on New
-            Year’s Day and cements your status as an early supporter of Zora.
-          </p>
-        </div> */}
-      {/* </div> */}
     </div>
   );
 }

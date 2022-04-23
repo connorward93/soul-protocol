@@ -17,21 +17,6 @@ export default function Welcome() {
 
   return (
     <div className={classes.container}>
-      <div id="block1" className={classes.text}>
-        Welcome
-      </div>
-      <div id="block2" className={classes.text}>
-        Lorem ipsum dolor sit amet.{" "}
-      </div>
-      <div id="block3" className={classes.text}>
-        Lorem ipsum dolor sit amet.{" "}
-      </div>
-      <div id="block4" className={classes.text}>
-        Lorem ipsum dolor sit amet.{" "}
-      </div>
-      <div id="block5" className={classes.text}>
-        Lorem ipsum dolor sit amet.{" "}
-      </div>
       <div id="actions" className={classes.actions}>
         <Link href="/mint">
           <a className={classes.card}>

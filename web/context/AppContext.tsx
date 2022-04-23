@@ -8,12 +8,16 @@ import {
 
 type TState = {
   status: string;
+  mintVariant: "hardware" | "questions" | "camera" | null;
+  mintStatus: string | null;
 };
 
 type TAction = { type: string; payload: any };
 
 const initialState: TState = {
   status: "initial",
+  mintVariant: null,
+  mintStatus: "initial",
 };
 
 const AppContext = createContext<{
@@ -26,6 +30,10 @@ const AppContext = createContext<{
 
 const reducer = (state: TState, action: TAction): TState => {
   switch (action.type) {
+    case "set-mint-variant":
+      return { ...state, mintVariant: action.payload };
+    case "set-mint-status":
+      return { ...state, mintStatus: action.payload };
     case "set-status":
       return { ...state, status: action.payload };
     default:
