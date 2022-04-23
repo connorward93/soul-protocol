@@ -19,12 +19,12 @@ export default function Mint() {
             Year’s Day and cements your status as an early supporter of Zora.
           </p>
         </div>
-        <div className={classes.card}>
+        {/* <div className={classes.card}>
           <p> 0xCa21d4228cDCc68D4e23807E5e370C07577Dd152 ↗ №</p>
           <p>minted 56,741 </p>
           <p>price Free. </p>
           <p>Just pay gas.</p>
-        </div>
+        </div> */}
       </div>
     </div>
   );
