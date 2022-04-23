@@ -1,11 +1,14 @@
 import type { NextPage } from "next";
 import Home from "components/Home";
+import Layout from "layout";
 
 const Index: NextPage = () => {
   return (
-    <main>
-      <Home />
-    </main>
+    <Layout>
+      <main>
+        <Home />
+      </main>
+    </Layout>
   );
 };
 

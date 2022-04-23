@@ -1,13 +1,24 @@
-import { createContext, Dispatch, useReducer } from "react";
-// import { TUser } from "models/User";
+import {
+  createContext,
+  Dispatch,
+  useReducer,
+  useEffect,
+  useState,
+} from "react";
 
-type TState = {};
+type TState = {
+  instance: any;
+  provider: any;
+};
 
 type TAction = { type: string; payload: any };
 
-const initialState: TState = {};
+const initialState: TState = {
+  instance: null,
+  provider: null,
+};
 
-const AppContext = createContext<{
+const AuthContext = createContext<{
   state: TState;
   dispatch: Dispatch<TAction>;
 }>({
@@ -17,17 +28,21 @@ const AppContext = createContext<{
 
 const reducer = (state: TState, action: TAction): TState => {
   switch (action.type) {
+    case "set-instance":
+      return { ...state, instance: action.payload };
+    case "set-provider":
+      return { ...state, provider: action.payload };
     default:
       return state;
   }
 };
 
-export const AppProvider = ({ children }: { children: JSX.Element }) => {
+export const AuthProvider = ({ children }: { children: JSX.Element }) => {
   const [state, dispatch] = useReducer(reducer, initialState);
   const value = { state, dispatch };
 
-  return <AppContext.Provider value={value}>{children}</AppContext.Provider>;
+  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };
 
-export const AppConsumer = AppContext.Consumer;
-export default AppContext;
+export const AuthConsumer = AuthContext.Consumer;
+export default AuthContext;
