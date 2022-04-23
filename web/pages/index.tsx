@@ -5,7 +5,6 @@ import Layout from "layout";
 import { useContext, useEffect, useState } from "react";
 import AuthContext from "context/AuthContext--old";
 import AppContext from "context/AppContext";
-import Link from "next/Link";
 import Welcome from "components/Welcome";
 
 const Index: NextPage = () => {
