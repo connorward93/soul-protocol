@@ -17,8 +17,10 @@ export default function Welcome() {
 
   return (
     <div className={classes.container}>
+      <div id="block1" className={classes.text}>
+        Welcome
+      </div>
       <div id="actions" className={classes.actions}>
-        <div id="block1">Welcome</div>
         <Link href="/mint">
           <a className={classes.card}>
             <div className={classes.image}></div>
