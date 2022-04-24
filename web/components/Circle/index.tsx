@@ -123,6 +123,7 @@ export default function Circle() {
   return (
     <div className={classes.container}>
       <svg
+        id="circle-random"
         className={classes.circle}
         width="300"
         height="300"
