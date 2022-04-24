@@ -26,7 +26,7 @@ export default function Mint() {
 
     var config = {
       method: "post",
-      url: "/api/upload",
+      url: "/api/file",
       headers: {
         "Content-Type": "application/json",
       },
