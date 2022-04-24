@@ -9,10 +9,7 @@ import { Currency, mintNFTWithUri, ipfsUpload } from "@tatumio/tatum";
  */
 const imgHash = await ipfsUpload(SVG, "Soul Image");
 
-const metadata = {
-  name: "Soul",
-  desicription:
-    'Your Soul NFT represents your most authentic "true self" on chain. An interoperable "you" that bridges pysical and vitrual world. A build block for a better web. Connect yourself severeign Soul to the World, and watch it evolves along side you.',
+const singleMetadata = {
   image: imgHash.ipfshash,
   attributes: [
     {
@@ -48,10 +45,21 @@ const metadata = {
   ],
 };
 
-const nftHash = await ipfsUpload(metadata, "tokenMetadata");
+const nftHash = await ipfsUpload(signleMetadata, "singleMetadata");
 
 const transactionHash = await mintNFTWithUri(false, {
   to: "0x687422eEA2cB73B5d3e242bA5456b782919AFc85",
   url: nftHash,
   chain: Currency.MUMBAI,
 });
+
+let addHistory = (nftHash) => {
+  let history = {
+    name: "Soul",
+    desicription:
+      'Your Soul NFT represents your most authentic "true self" on chain. An interoperable "you" that bridges pysical and vitrual world. A build block for a better web. Connect yourself severeign Soul to the World, and watch it evolves along side you.',
+    record: [],
+  };
+  history.record.push(nftHash);
+  return history;
+};
