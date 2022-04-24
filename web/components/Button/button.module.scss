@@ -2,7 +2,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 14px 32px;
+  padding: 7px 16px;
   font-size: 20px;
   letter-spacing: 0.08em;
   line-height: 1.5rem;
@@ -15,6 +15,7 @@
   min-width: 140px;
   cursor: pointer;
   background: transparent;
+  position: relative;
 }
 
 .button:hover {
@@ -24,7 +25,7 @@
 
 .button:disabled {
   pointer-events: none;
-  opacity: 0.4;
+  opacity: 0.3;
 }
 
 .button--secondary {
@@ -32,6 +33,7 @@
   background-color: black;
   font-size: 1.6rem;
   padding: 1.2rem 2.6rem;
+  height: 4.6rem;
   &:hover {
     color: black;
     background-color: white;

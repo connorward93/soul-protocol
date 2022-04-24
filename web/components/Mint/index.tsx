@@ -1,14 +1,46 @@
-import React, { useContext } from "react";
+import React, { useContext, useState } from "react";
 import classes from "./mint.module.scss";
 import Button from "components/Button";
 import AppContext from "context/AppContext";
 import Camera from "./Camera";
 import Generator from "./Generator";
 import Questions from "./Questions";
+import axios from "axios";
+import Spinner from "components/Spinner";
+import Web3 from "web3";
+import AuthContext, { signAndSendTransaction } from "context/AuthContext";
 
 export default function Mint() {
   const { state, dispatch } = useContext(AppContext);
-  const { mintVariant, mintStatus } = state;
+  const { provider, signAndSendTransaction } = useContext(AuthContext);
+  const { colours, mintVariant, mintStatus } = state;
+  const [loading, setLoading] = useState(false);
+
+  const mintNFT = async () => {
+    setLoading(true);
+    const data = JSON.stringify({
+      data: {
+        colours: [colours?.[0], colours?.[1], colours?.[2]],
+      },
+    });
+
+    var config = {
+      method: "post",
+      url: "/api/upload",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      data: data,
+    };
+    // @ts-ignore
+    const req = axios(config)
+      .then(async function(response) {
+        setLoading(false);
+     
+      .catch(function(error) {
+        console.log(error);
+      });
+  };
 
   const renderCanvas = () => {
     switch (mintVariant) {
@@ -56,10 +88,10 @@ export default function Mint() {
           <div>
             <Button
               variant="secondary"
-              onClick={() => {}}
+              onClick={mintNFT}
               disabled={!mintStatus?.includes("mintable")}
             >
-              Mint
+              <>{loading ? <Spinner /> : "Mint"}</>
             </Button>
           </div>
         </div>
