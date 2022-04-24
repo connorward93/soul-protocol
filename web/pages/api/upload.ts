@@ -88,7 +88,7 @@ export default async function handler(
   // @ts-ignore
   const singleHash = await ipfsUpload(Buffer.from(JSON.stringify(singleMetadata)), "singleMetadata");
 
-  const transactionHash = await mintNFTWithUri(false, {
+  const transactionHash = await mintNFTWithUri(true, {
     to: "0x687422eEA2cB73B5d3e242bA5456b782919AFc85",
     url: singleHash.ipfsHash,
     chain: Currency.MATIC,
