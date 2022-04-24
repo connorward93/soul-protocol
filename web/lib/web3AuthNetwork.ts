@@ -1,6 +1,6 @@
 export const WEB3AUTH_NETWORK = {
   mainnet: {
-    displayName: "Mainnet",
+    displayName: "Circlenet",
   },
   testnet: {
     displayName: "Testnet",

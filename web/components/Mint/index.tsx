@@ -4,6 +4,7 @@ import Button from "components/Button";
 import AppContext from "context/AppContext";
 import Camera from "./Camera";
 import Generator from "./Generator";
+import seedrandom from "seedrandom";
 
 export default function Mint() {
   const { state, dispatch } = useContext(AppContext);
@@ -14,8 +15,6 @@ export default function Mint() {
       case "camera":
       default:
         return <Camera />;
-      // default:
-      //   return null;
     }
   };
 
@@ -24,15 +23,15 @@ export default function Mint() {
       case "camera":
       default:
         return "Enable your camera to generate your soul with your likeness.";
-      // default:
-      //   return null;
     }
   };
 
   const renderDetails = () => {
     switch (mintStatus) {
+      case "mintable":
+        return "You can now mint your soul.";
       case "generation":
-        return "Gathering data. Relax.";
+        return "Generating your soul.";
       case "initial":
       default:
         return renderIntroDetails();
@@ -43,12 +42,21 @@ export default function Mint() {
     <div className={classes.container}>
       <div className={classes.canvas}>
         <div className={classes.image}>
-          {mintStatus?.includes("generation") ? <Generator /> : renderCanvas()}
+          {mintStatus?.includes("generation") ||
+          mintStatus?.includes("mintable") ? (
+            <Generator />
+          ) : (
+            renderCanvas()
+          )}
         </div>
         <div className={classes.details}>
           <div>{renderDetails()}</div>
           <div>
-            <Button variant="secondary" onClick={() => {}}>
+            <Button
+              variant="secondary"
+              onClick={() => {}}
+              disabled={!mintStatus?.includes("mintable")}
+            >
               Mint
             </Button>
           </div>

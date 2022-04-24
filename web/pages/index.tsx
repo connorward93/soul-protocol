@@ -1,6 +1,6 @@
 import type { NextPage } from "next";
 import Head from "next/head";
-import Main from "components/Main";
+import Circle from "components/Circle";
 import Layout from "layout";
 import { useContext, useEffect, useState } from "react";
 import AuthContext from "context/AuthContext--old";

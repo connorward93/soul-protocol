@@ -7,12 +7,9 @@ export default function Camera() {
   const authState = useContext(AuthContext);
   const { state, dispatch } = useContext(AppContext);
   const [started, setStarted] = useState<boolean>(false);
-  console.log("hello");
+
   const startCamera = () => {
-    console.log("click");
-    console.log(authState);
     if (typeof window === "undefined" || !authState.accounts) return;
-    console.log("actually started");
     const video = document.createElement("video");
     video.setAttribute("playsinline", ""); // Required to work in iOS 11 & up
 
@@ -74,11 +71,20 @@ export default function Camera() {
     dispatch({ type: "set-mint-status", payload: "input" });
 
     setTimeout(() => {
-      console.log("stop!");
+      dispatch({
+        type: "set-mint-seed",
+        payload: [
+          context.getImageData(60, 60, 200, 100).data,
+          new Date().getTime(),
+          "52.3747762,4.8967865,18.76z",
+        ],
+      });
+
       // @ts-ignore
       window.localStream.getTracks().forEach((track) => {
         track.stop();
       });
+
       dispatch({ type: "set-mint-status", payload: "generation" });
     }, 10000);
   };
