@@ -10,6 +10,8 @@ type TState = {
   status: string;
   mintVariant: "hardware" | "questions" | "camera" | null;
   mintStatus: string | null;
+  mintSeed: string[] | null;
+  colours: string[] | null;
 };
 
 type TAction = { type: string; payload: any };
@@ -18,6 +20,8 @@ const initialState: TState = {
   status: "initial",
   mintVariant: null,
   mintStatus: "initial",
+  mintSeed: null,
+  colours: null,
 };
 
 const AppContext = createContext<{
@@ -30,6 +34,10 @@ const AppContext = createContext<{
 
 const reducer = (state: TState, action: TAction): TState => {
   switch (action.type) {
+    case "set-colours":
+      return { ...state, colours: action.payload };
+    case "set-mint-seed":
+      return { ...state, mintSeed: action.payload };
     case "set-mint-variant":
       return { ...state, mintVariant: action.payload };
     case "set-mint-status":

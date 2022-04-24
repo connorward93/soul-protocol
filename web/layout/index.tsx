@@ -1,10 +1,9 @@
 import React, { ReactNode, useContext, useEffect, useState } from "react";
 import AuthContext from "context/AuthContext";
 import AppContext from "context/AppContext";
-
 import classes from "./layout.module.scss";
 import Button from "components/Button";
-import Main from "components/Main";
+import Circle from "components/Circle";
 
 export default function Layout({ children }: { children: ReactNode }) {
   const {
@@ -73,8 +72,8 @@ export default function Layout({ children }: { children: ReactNode }) {
           )}
         </div>
       </nav>
-      {/* {loading || !authState.web3Auth || !user ? <Main /> : children} */}
-      {children}
+      {loading || !authState.web3Auth || !user ? <Circle /> : children}
+      {/* {children} */}
     </div>
   );
 }
