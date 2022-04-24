@@ -1,9 +1,11 @@
-import React, { useEffect } from "react";
+import React, { useContext, useEffect } from "react";
+import AppContext from "context/AppContext";
 import classes from "./welcome.module.scss";
 import gsap from "gsap";
 import Link from "next/link";
 
 export default function Welcome() {
+  const { dispatch } = useContext(AppContext);
   useEffect(() => {
     const timeline = gsap.timeline();
     const els = document.querySelectorAll('[id^="block"]');
@@ -31,7 +33,12 @@ export default function Welcome() {
           </a>
         </Link>
         <Link href="/mint">
-          <a className={classes.card}>
+          <a
+            className={classes.card}
+            onClick={() => {
+              dispatch({ type: "set-mint-variant", payload: "questions" });
+            }}
+          >
             <div className={classes.image}></div>
             <div className={classes.details}>
               <h5>Quick onboarding</h5>

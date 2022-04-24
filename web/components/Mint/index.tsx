@@ -4,7 +4,7 @@ import Button from "components/Button";
 import AppContext from "context/AppContext";
 import Camera from "./Camera";
 import Generator from "./Generator";
-import seedrandom from "seedrandom";
+import Questions from "./Questions";
 
 export default function Mint() {
   const { state, dispatch } = useContext(AppContext);
@@ -12,6 +12,8 @@ export default function Mint() {
 
   const renderCanvas = () => {
     switch (mintVariant) {
+      case "questions":
+        return <Questions />;
       case "camera":
       default:
         return <Camera />;
