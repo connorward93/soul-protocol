@@ -30,8 +30,7 @@ export default function Generator() {
 
     setTimeout(() => {
       dispatch({ type: "set-colours", payload: arr });
-      setColours([...arr]);
-    }, 10000);
+    }, 5000);
   }, [mintSeed]);
 
   return (

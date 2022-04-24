@@ -7,17 +7,18 @@ export default function Welcome() {
   useEffect(() => {
     const timeline = gsap.timeline();
     const els = document.querySelectorAll('[id^="block"]');
-    // els.forEach((el) => {
-    //   timeline.to(el, { y: "-100%", opacity: 1 }, "+=1");
-    //   timeline.to(el, { y: "-200%", opacity: 0 }, "+=0.5");
-    //   timeline.to(el, { visibility: "hidden" });
-    // });
+    els.forEach((el) => {
+      timeline.to(el, { y: "-100%", opacity: 1 }, "+=1");
+      timeline.to(el, { y: "-200%", opacity: 0 }, "+=0.5");
+      timeline.to(el, { visibility: "hidden" });
+    });
     timeline.to("#actions", { opacity: 1 }, "+=1");
   }, []);
 
   return (
     <div className={classes.container}>
       <div id="actions" className={classes.actions}>
+        <div id="block1">Welcome</div>
         <Link href="/mint">
           <a className={classes.card}>
             <div className={classes.image}></div>
