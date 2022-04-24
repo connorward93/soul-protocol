@@ -1,6 +1,6 @@
 import React, { useContext, useEffect } from "react";
 import gsap from "gsap";
-import classes from "./home.module.scss";
+import classes from "./circle.module.scss";
 import Button from "components/Button";
 import AppContext from "context/AppContext";
 import { motion } from "framer-motion";
