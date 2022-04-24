@@ -8,7 +8,7 @@ import Questions from "./Questions";
 import axios from "axios";
 import Spinner from "components/Spinner";
 import Web3 from "web3";
-import AuthContext, { signAndSendTransaction } from "context/AuthContext";
+import AuthContext from "context/AuthContext";
 
 export default function Mint() {
   const { state, dispatch } = useContext(AppContext);
@@ -33,13 +33,9 @@ export default function Mint() {
       data: data,
     };
     // @ts-ignore
-    const req = axios(config)
-      .then(async function(response) {
-        setLoading(false);
-     
-      .catch(function(error) {
-        console.log(error);
-      });
+    const req = axios(config).then(async function(response) {
+      setLoading(false);
+    });
   };
 
   const renderCanvas = () => {
