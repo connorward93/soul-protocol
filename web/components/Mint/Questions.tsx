@@ -2,7 +2,6 @@
 import React from "react";
 import classes from "./mint.module.scss";
 import axios from "axios";
-require("dotenv").config();
 
 type State = "loading" | "noQuestions" | "done";
 type QuestionsProps = { readonly state?: State };
