@@ -33,3 +33,7 @@ const Index: NextPage = () => {
 };
 
 export default Index;
+
+export function getInitialProps() {
+  return { props: {} };
+}

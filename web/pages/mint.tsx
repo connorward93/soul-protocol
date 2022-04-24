@@ -13,3 +13,7 @@ export default function Mint() {
     </Layout>
   );
 }
+
+export function getInitialProps() {
+  return { props: {} };
+}

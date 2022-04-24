@@ -13,3 +13,7 @@ export default function Community() {
     </Layout>
   );
 }
+
+export function getInitialProps() {
+  return { props: {} };
+}
