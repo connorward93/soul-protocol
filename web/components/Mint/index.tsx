@@ -24,26 +24,22 @@ export default function Mint() {
       },
     });
 
-    var config = {
+    // @ts-ignore
+    const req = axios({
       method: "post",
       url: "/api/file",
       headers: {
         "Content-Type": "application/json",
       },
       data: data,
-    };
-    // @ts-ignore
-    const req = axios(config).then(async function (res) {
+    }).then(async function (res) {
       setLoading(false);
       return res;
     });
 
-    // TODO - Should the API return the tokenURI? idk how this works lol
-    const tokenURI = req;
+    const tokenURI = (await req).data.metadata.url;
 
     // Set up your Ethereum transaction
-    // const signer = new Signer();
-
     // @ts-ignore
     const provider = new ethers.providers.Web3Provider(window.ethereum, "any");
     await provider.send("eth_requestAccounts", []);
@@ -62,17 +58,18 @@ export default function Mint() {
     const signerContract = contract.connect(signer);
     signerContract.mint(tokenURI);
 
-    signerContract.on(
-      "Transfer",
-      (from: string, to: string, tokenId: BigNumber) => {
-        console.log("success");
-        // if (from === ethers.constants.AddressZero && to === account) {
-        //   hasSetMintId = true;
-        //   // setMintId(tokenId.toNumber().toString());
-        //   // openModalByName("success");
-        // }
-      }
-    );
+    console.log(signerContract);
+    // signerContract.on(
+    //   filter,
+    //   (from: string, to: string, tokenId: BigNumber) => {
+    //     console.log("success", tokenId);
+    //     // if (from === ethers.constants.AddressZero && to === account) {
+    //     //   hasSetMintId = true;
+    //     //   // setMintId(tokenId.toNumber().toString());
+    //     //   // openModalByName("success");
+    //     // }
+    //   }
+    // );
   };
 
   const renderCanvas = () => {

@@ -6,7 +6,7 @@ import fs from "fs";
 import path from "path";
 
 type Data = {
-  name: string;
+  metadata: any;
 };
 
 const NFT_STORAGE_KEY = process.env.NFT_STORAGE!;
@@ -15,6 +15,8 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse<Data>
 ) {
+  // @ts-ignore
+  const { colours } = req.body.data;
   const client = new NFTStorage({ token: NFT_STORAGE_KEY });
 
   const svg = `<svg
@@ -35,19 +37,19 @@ export default async function handler(
           y2="258.5"
           gradientUnits="userSpaceOnUse"
         >
-          <stop id="stop1" stop-color="#FF00F5" />
-          <stop id="stop2" offset="0.499884" stop-color="#0027F5" />
-          <stop id="stop3" offset="1" stop-color="#6DFEFE" />
+          <stop id="stop1" stop-color="${colours[0]}" />
+          <stop id="stop2" offset="0.499884" stop-color="${colours[1]}" />
+          <stop id="stop3" offset="1" stop-color="${colours[2]}" />
         </linearGradient>
       </defs>
       </svg>`;
 
   const file = new File([svg], "test.svg", { type: "image/svg+xml" });
   const metadata = await client.store({
-    name: "My sweet NFT",
-    description: "Just try to funge it. You can't do it.",
+    name: "Soul NFT",
+    description: "Your on-chain true self",
     image: file,
   });
-  console.log(metadata);
-  res.status(200).json({ name: "John Doe" });
+
+  res.status(200).json({ metadata });
 }
