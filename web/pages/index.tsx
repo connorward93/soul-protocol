@@ -3,14 +3,14 @@ import Head from "next/head";
 import Circle from "components/Circle";
 import Layout from "layout";
 import { useContext, useEffect, useState } from "react";
-import AuthContext from "context/AuthContext--web3auth";
+import AuthContext from "context/AuthContext";
 import AppContext from "context/AppContext";
 import Welcome from "components/Welcome";
 
 const Index: NextPage = () => {
   const [status, setStatus] = useState("initial");
   const { state, dispatch } = useContext(AppContext);
-  const authState = useContext(AuthContext);
+  const { state: authState } = useContext(AuthContext);
 
   useEffect(() => {
     dispatch({ type: "set-status", payload: "Thinking" });

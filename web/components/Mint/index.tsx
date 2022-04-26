@@ -7,12 +7,9 @@ import Generator from "./Generator";
 import Questions from "./Questions";
 import axios from "axios";
 import Spinner from "components/Spinner";
-import Web3 from "web3";
-import AuthContext from "context/AuthContext--web3auth";
 
 export default function Mint() {
   const { state, dispatch } = useContext(AppContext);
-  const { provider, signAndSendTransaction } = useContext(AuthContext);
   const { colours, mintVariant, mintStatus } = state;
   const [loading, setLoading] = useState(false);
 
