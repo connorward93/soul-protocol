@@ -36,20 +36,7 @@ export default function Layout({ children }: { children: ReactNode }) {
           ) : (
             <Button onClick={login} disabled={loading || !authState.provider}>
               <>
-                <span
-                  style={
-                    loading
-                      ? {
-                          visibility: "hidden",
-                          position: "absolute",
-                          opacity: 0,
-                        }
-                      : {}
-                  }
-                >
-                  Login with Metamask
-                </span>
-                {loading ? "Loading" : null}
+                <span>Login with Metamask</span>
               </>
             </Button>
           )}
