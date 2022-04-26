@@ -7,7 +7,7 @@ import Generator from "./Generator";
 import Questions from "./Questions";
 import axios from "axios";
 import Spinner from "components/Spinner";
-import { ethers, Signer } from "ethers";
+import { ethers, Signer, BigNumber } from "ethers";
 
 export default function Mint() {
   const { state, dispatch } = useContext(AppContext);
@@ -43,36 +43,36 @@ export default function Mint() {
 
     // Set up your Ethereum transaction
     // const signer = new Signer();
-    const contract = new ethers.Contract(
-      "0x4E8E048Cc9482716084AC6c0611d76C4e4F27110",
-      ["function mint()"]
-    );
+
     // @ts-ignore
     const provider = new ethers.providers.Web3Provider(window.ethereum, "any");
     await provider.send("eth_requestAccounts", []);
     const signer = provider.getSigner();
     const address = await signer.getAddress();
 
-    const transactionParameters = {
-      to: "0x4E8E048Cc9482716084AC6c0611d76C4e4F27110", // Required except during contract publications.
-      from: address, // must match user's active address.
-      data: contract.mint(address, tokenURI).encodeABI(), //make call to NFT smart contract
-    };
+    const contract = new ethers.Contract(
+      "0x4E8E048Cc9482716084AC6c0611d76C4e4F27110",
+      [
+        "constructor(string symbol, string name)",
+        "function mint(string memory)",
+      ],
+      signer
+    );
 
     const signerContract = contract.connect(signer);
-    let hasSetMintId = false;
-    console.log(signerContract);
+    signerContract.mint(tokenURI);
 
-    // signerContract.on(
-    //   "Transfer",
-    //   (from: string, to: string, tokenId: BigNumber) => {
-    //     if (from === ethers.constants.AddressZero && to === account) {
-    //       hasSetMintId = true;
-    //       // setMintId(tokenId.toNumber().toString());
-    //       // openModalByName("success");
-    //     }
-    //   }
-    // );
+    signerContract.on(
+      "Transfer",
+      (from: string, to: string, tokenId: BigNumber) => {
+        console.log("success");
+        // if (from === ethers.constants.AddressZero && to === account) {
+        //   hasSetMintId = true;
+        //   // setMintId(tokenId.toNumber().toString());
+        //   // openModalByName("success");
+        // }
+      }
+    );
   };
 
   const renderCanvas = () => {
