@@ -3,6 +3,7 @@ import AppContext from "context/AppContext";
 import classes from "./welcome.module.scss";
 import gsap from "gsap";
 import Link from "next/link";
+import classNames from "classnames";
 
 export default function Welcome() {
   const { dispatch } = useContext(AppContext);
@@ -24,7 +25,7 @@ export default function Welcome() {
       </div>
       <div id="actions" className={classes.actions}>
         <Link href="/mint">
-          <a className={classes.card}>
+          <a className={classNames(classes.card, classes["card--disabled"])}>
             <div className={classes.image}></div>
             <div className={classes.details}>
               <h5>Mint with hardware</h5>
@@ -34,7 +35,7 @@ export default function Welcome() {
         </Link>
         <Link href="/mint">
           <a
-            className={classes.card}
+            className={classNames(classes.card, classes["card--disabled"])}
             onClick={() => {
               dispatch({ type: "set-mint-variant", payload: "questions" });
             }}

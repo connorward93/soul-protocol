@@ -38,6 +38,11 @@
   }
 }
 
+.card--disabled {
+  pointer-events: none;
+  opacity: 0.3;
+}
+
 .image {
   //   height: 40rem;
   padding-bottom: 100%;

@@ -3,7 +3,7 @@ import Head from "next/head";
 import Circle from "components/Circle";
 import Layout from "layout";
 import { useContext, useEffect, useState } from "react";
-import AuthContext from "context/AuthContext";
+import AuthContext from "context/AuthContext--web3auth";
 import AppContext from "context/AppContext";
 import Welcome from "components/Welcome";
 
@@ -18,7 +18,7 @@ const Index: NextPage = () => {
       setStatus("logged-in");
       return;
     }
-  }, [authState]);
+  }, [authState, dispatch]);
 
   return (
     <Layout>

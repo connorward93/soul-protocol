@@ -7,39 +7,22 @@ import Circle from "components/Circle";
 
 export default function Layout({ children }: { children: ReactNode }) {
   const {
-    accounts,
-    getAccounts,
+    state: authState,
+    dispatch: authDispatch,
     login,
-    logout,
-    provider,
-    isLoading,
-    // processing,
-    ...authState
   } = useContext(AuthContext);
   const { state, dispatch } = useContext(AppContext);
-  const loading = isLoading;
-  const [user, setUser] = useState<string | null>();
-
-  useEffect(() => {
-    const localUser =
-      typeof window !== "undefined" ? localStorage.getItem("user") : "";
-    setUser(localUser);
-  }, []);
-
-  useEffect(() => {
-    if (provider) {
-      (async () => {
-        const accounts = await getAccounts();
-        setUser(accounts[0]);
-      })();
-    }
-  }, [provider]);
+  const loading = false;
+  const { user } = authState;
 
   const Profile = () => {
     return (
-      <div className={classes.profile} onClick={logout}>
+      <div className={classes.profile} onClick={login}>
         <div className={classes.image}></div>
-        <div className={classes.name}>{user?.substring(0, 12)}...</div>
+        <div className={classes.name}>
+          {user?.substring(0, 6)}...
+          {user?.substring(user.length - 12, user.length - 6)}
+        </div>
       </div>
     );
   };
@@ -51,7 +34,7 @@ export default function Layout({ children }: { children: ReactNode }) {
           {user ? (
             <Profile />
           ) : (
-            <Button onClick={login} disabled={loading}>
+            <Button onClick={login} disabled={loading || !authState.provider}>
               <>
                 <span
                   style={
@@ -64,7 +47,7 @@ export default function Layout({ children }: { children: ReactNode }) {
                       : {}
                   }
                 >
-                  Login
+                  Login with Metamask
                 </span>
                 {loading ? "Loading" : null}
               </>
@@ -72,8 +55,7 @@ export default function Layout({ children }: { children: ReactNode }) {
           )}
         </div>
       </nav>
-      {loading || !authState.web3Auth || !user ? <Circle /> : children}
-      {/* {children} */}
+      {loading || !user ? <Circle /> : children}
     </div>
   );
 }

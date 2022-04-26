@@ -1,5 +1,5 @@
 import AppContext from "context/AppContext";
-import AuthContext from "context/AuthContext";
+import AuthContext from "context/AuthContext--web3auth";
 import React, { useContext, useState, useEffect } from "react";
 import classes from "./mint.module.scss";
 
