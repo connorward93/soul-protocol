@@ -76,7 +76,7 @@ export default function Camera() {
         payload: [
           context.getImageData(60, 60, 200, 100).data,
           new Date().getTime(),
-          "52.3747762,4.8967865,18.76z",
+          "52.3747762,4.8967865,18.76z", // Location of ETH Amsterdam.
         ],
       });
 

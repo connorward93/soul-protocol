@@ -7,7 +7,7 @@ import Generator from "./Generator";
 import Questions from "./Questions";
 import axios from "axios";
 import Spinner from "components/Spinner";
-import { ethers } from "ethers";
+import { ethers, Signer } from "ethers";
 
 export default function Mint() {
   const { state, dispatch } = useContext(AppContext);
@@ -16,11 +16,6 @@ export default function Mint() {
 
   const mintNFT = async () => {
     setLoading(true);
-    const contract = new ethers.Contract(
-      "0x4E8E048Cc9482716084AC6c0611d76C4e4F27110",
-      ["function mint()"]
-    );
-    console.log("contract", contract);
 
     // Generate SVG and store in IPFS.
     const data = JSON.stringify({
@@ -38,9 +33,46 @@ export default function Mint() {
       data: data,
     };
     // @ts-ignore
-    const req = axios(config).then(async function (response) {
+    const req = axios(config).then(async function (res) {
       setLoading(false);
+      return res;
     });
+
+    // TODO - Should the API return the tokenURI? idk how this works lol
+    const tokenURI = req;
+
+    // Set up your Ethereum transaction
+    // const signer = new Signer();
+    const contract = new ethers.Contract(
+      "0x4E8E048Cc9482716084AC6c0611d76C4e4F27110",
+      ["function mint()"]
+    );
+    // @ts-ignore
+    const provider = new ethers.providers.Web3Provider(window.ethereum, "any");
+    await provider.send("eth_requestAccounts", []);
+    const signer = provider.getSigner();
+    const address = await signer.getAddress();
+
+    const transactionParameters = {
+      to: "0x4E8E048Cc9482716084AC6c0611d76C4e4F27110", // Required except during contract publications.
+      from: address, // must match user's active address.
+      data: contract.mint(address, tokenURI).encodeABI(), //make call to NFT smart contract
+    };
+
+    const signerContract = contract.connect(signer);
+    let hasSetMintId = false;
+    console.log(signerContract);
+
+    // signerContract.on(
+    //   "Transfer",
+    //   (from: string, to: string, tokenId: BigNumber) => {
+    //     if (from === ethers.constants.AddressZero && to === account) {
+    //       hasSetMintId = true;
+    //       // setMintId(tokenId.toNumber().toString());
+    //       // openModalByName("success");
+    //     }
+    //   }
+    // );
   };
 
   const renderCanvas = () => {
@@ -98,7 +130,7 @@ export default function Mint() {
             <Button
               variant="secondary"
               onClick={mintNFT}
-              disabled={!mintStatus?.includes("mintable")}
+              // disabled={!mintStatus?.includes("mintable")}
             >
               <>{loading ? <Spinner /> : "Mint"}</>
             </Button>

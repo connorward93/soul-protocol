@@ -62,6 +62,7 @@ export const AuthProvider = ({ children }: { children: JSX.Element }) => {
     const signer = provider.getSigner();
     const account = await signer.getAddress();
     dispatch({ type: "set-account", payload: account });
+    dispatch({ type: "set-provider", payload: account });
   };
 
   const logout = () => {};
