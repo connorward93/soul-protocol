@@ -1,15 +1,15 @@
 import AppContext from "context/AppContext";
-import AuthContext from "context/AuthContext--web3auth";
+import AuthContext from "context/AuthContext";
 import React, { useContext, useState, useEffect } from "react";
 import classes from "./mint.module.scss";
 
 export default function Camera() {
-  const authState = useContext(AuthContext);
+  const { state: authState } = useContext(AuthContext);
   const { state, dispatch } = useContext(AppContext);
   const [started, setStarted] = useState<boolean>(false);
 
   const startCamera = () => {
-    if (typeof window === "undefined" || !authState.accounts) return;
+    if (typeof window === "undefined" || !authState.user) return;
     const video = document.createElement("video");
     video.setAttribute("playsinline", ""); // Required to work in iOS 11 & up
 

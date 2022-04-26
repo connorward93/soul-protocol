@@ -57,7 +57,6 @@ export const AuthProvider = ({ children }: { children: JSX.Element }) => {
   const login = async () => {
     // @ts-ignore
     const provider = new ethers.providers.Web3Provider(window.ethereum, "any");
-    // Prompt user for account connections
     await provider.send("eth_requestAccounts", []);
     const signer = provider.getSigner();
     const account = await signer.getAddress();
@@ -66,8 +65,6 @@ export const AuthProvider = ({ children }: { children: JSX.Element }) => {
 
   const logout = () => {};
 
-  const value = { state, dispatch, login };
-
   // @ts-ignore
   (async () => {
     if (!state.provider) {
@@ -75,6 +72,8 @@ export const AuthProvider = ({ children }: { children: JSX.Element }) => {
       dispatch({ type: "set-provider", payload: provider });
     }
   })();
+
+  const value = { state, dispatch, login };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };
