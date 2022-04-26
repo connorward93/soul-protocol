@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import classes from "./mint.module.scss";
 import Button from "components/Button";
 import AppContext from "context/AppContext";
@@ -7,6 +7,7 @@ import Generator from "./Generator";
 import Questions from "./Questions";
 import axios from "axios";
 import Spinner from "components/Spinner";
+import { ethers } from "ethers";
 
 export default function Mint() {
   const { state, dispatch } = useContext(AppContext);
@@ -15,6 +16,13 @@ export default function Mint() {
 
   const mintNFT = async () => {
     setLoading(true);
+    const contract = new ethers.Contract(
+      "0x4E8E048Cc9482716084AC6c0611d76C4e4F27110",
+      ["function mint()"]
+    );
+    console.log("contract", contract);
+
+    // Generate SVG and store in IPFS.
     const data = JSON.stringify({
       data: {
         colours: [colours?.[0], colours?.[1], colours?.[2]],
@@ -63,6 +71,14 @@ export default function Mint() {
       default:
         return renderIntroDetails();
     }
+  };
+
+  const mint = () => {
+    const contract = new ethers.Contract(
+      "0x4E8E048Cc9482716084AC6c0611d76C4e4F27110",
+      ["function mint()"]
+    );
+    console.log("contract", contract);
   };
 
   return (
