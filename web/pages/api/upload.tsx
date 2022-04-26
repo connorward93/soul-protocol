@@ -47,10 +47,10 @@ export default async function handler(
   const blob = new Blob([svg]);
   const array = await blob.arrayBuffer();
   const upload = Buffer.from(array);
-  const imgHash = await ipfsUpload(upload, "Soul SVG");
+  // const imgHash = await ipfsUpload(upload, "Soul SVG");
 
   const singleMetadata = {
-    image: imgHash.ipfsHash,
+    // image: imgHash.ipfsHash,
     attributes: [
       {
         R: colours[0], //hex
@@ -91,13 +91,13 @@ export default async function handler(
     "singleMetadata"
   );
 
-  const transactionHash = await mintNFTWithUri(true, {
-    to: "0x687422eEA2cB73B5d3e242bA5456b782919AFc85",
-    url: singleHash.ipfsHash,
-    chain: Currency.MATIC,
-  });
+  // const transactionHash = await mintNFTWithUri(true, {
+  //   to: "0x687422eEA2cB73B5d3e242bA5456b782919AFc85",
+  //   url: singleHash.ipfsHash,
+  //   chain: Currency.MATIC,
+  // });
 
-  console.log(transactionHash);
+  // console.log(transactionHash);
 
-  res.status(200).json({ transactionHash });
+  // res.status(200).json({ transactionHash });
 }
