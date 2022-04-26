@@ -55,6 +55,7 @@ export const AuthProvider = ({ children }: { children: JSX.Element }) => {
   const [state, dispatch] = useReducer(reducer, initialState);
 
   const login = async () => {
+    if (typeof window === "undefined") return;
     // @ts-ignore
     const provider = new ethers.providers.Web3Provider(window.ethereum, "any");
     await provider.send("eth_requestAccounts", []);
@@ -67,6 +68,7 @@ export const AuthProvider = ({ children }: { children: JSX.Element }) => {
 
   // @ts-ignore
   (async () => {
+    if (typeof window === "undefined") return;
     if (!state.provider) {
       const provider = await detectEthereumProvider();
       dispatch({ type: "set-provider", payload: provider });
